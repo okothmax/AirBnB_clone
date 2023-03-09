@@ -7,6 +7,7 @@ Foundation(parent) class fpr the whole project
 import datetime
 from uuid import uuid4
 
+
 class BaseModel:
     """
     Custom base for all the classes in the AirBnb console project
@@ -24,7 +25,7 @@ class BaseModel:
 
     """
 
-    def __init__(self, *args,**kwargs):
+    def __init__(self, *args, **kwargs):
         '''
         Public instance artributes initialization after creation
 
@@ -52,7 +53,7 @@ class BaseModel:
         Updates the public instance attribute:
         'updated_at' - with the current datetime
         """
-        self.updated_at=datetime.utcnow()
+        self.updated_at = datetime.utcnow()
 
     def to_dict(self):
         """
