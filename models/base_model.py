@@ -36,8 +36,8 @@ class BaseModel:
         DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
         if not kwargs:
             self.id = str(uuid4())
-            self.created_at = datetime.utcnow()
-            self.updated_at = datetime.utcnow()
+            self.created_at = datetime.datetime.now()
+            self.updated_at = datetime.datetime.now()
         else:
             for key, value in kwargs.items():
                 if key in ("updated_at", "created_at"):
@@ -47,6 +47,12 @@ class BaseModel:
                     self.__dict__[key] = str(value)
                 else:
                     self.__dict__[key] = value
+
+    def __str__(self):
+        """
+        A string representation of the object
+        """
+        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
         """
