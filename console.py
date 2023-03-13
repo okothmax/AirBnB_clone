@@ -147,7 +147,7 @@ class HBNBCommand(cmd.Cmd):
         """Quit command to exit the program"""
         return True
 
-    def my_count(self, class_n):
+    def do_count(self, class_n):
         """
         Method counts instances of a certain class
         """
