@@ -27,51 +27,43 @@ class BaseModel:
     """
 
     def __init__(self, *args, **kwargs):
-        '''
-        Public instance artributes initialization after creation
-
-        Args:
-            *args(args): arguments
-            **kwargs(dict): attribute values
-        '''
-        DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
+        """
+        constructor of base Model
+        """
         if not kwargs:
             self.id = str(uuid4())
             self.created_at = datetime.datetime.now()
             self.updated_at = datetime.datetime.now()
+            models.storage.new(self)
         else:
-            for key, value in kwargs.items():
-                if key in ("updated_at", "created_at"):
-                    self.__dict__[key] = datetime.datetime.strptime(
-                        value, DATE_TIME_FORMAT)
-                elif key[0] == "id":
-                    self.__dict__[key] = str(value)
-                else:
-                    self.__dict__[key] = value
+            for key, val in kwargs.items():
+                if key == 'created_at' or key == 'updated_at':
+                    dataTime = "%Y-%m-%dT %H:%M:%S.%f"
+                    val = datetime.datetime.strptime(kwargs[key], dataTime)
+                if key != '__class__':
+                    setattr(self, key, val)
 
     def __str__(self):
         """
-        A string representation of the object
+        method for named
         """
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+        nameClass = self.__class__.__name__
+        return ("[{}] ({}) {}".format(nameClass, self.id, self.__dict__))
 
     def save(self):
         """
-        Updates the public instance attribute:
-        'updated_at' - with the current datetime
+        method for save stuff
         """
-        self.updated_at = datetime.datetime.now()
+        self.updated_at = datetime.now()
         models.storage.save()
 
     def to_dict(self):
         """
-        Creates a dictory representation of the object
+        method for create a dict
         """
-        map_objects = {}
-        for key, value in self.__dict__.items():
-            if key == "created_at" or key == "updated_at":
-                map_objects[key] = value.isoformat()
-            else:
-                map_objects[key] = value
-        map_objects["__class__"] = self.__class__.__name__
-        return map_objects
+        new_dict = dict(self.__dict__)
+        new_dict["__class__"] = self.__class__.__name__
+        format_Time = "%Y-%m-%dT %H:%M:%S.%f"
+        new_dict["created_at"] = self.created_at.strftime(format_Time)
+        new_dict["updated_at"] = self.updated_at.strftime(format_Time)
+        return new_dict
