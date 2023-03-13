@@ -1,50 +1,60 @@
 #!/usr/bin/python3
+"""Unit test for the class city
 """
-Test suits for amenities
-"""
-
-import os
-import models
 import unittest
-from datetime import datetime
-from models.base_model import BaseModel
+# import json
+import pep8
+from models import city
 from models.city import City
+from models.base_model import BaseModel
 
 
-class TestCity(unittest.TestCase):
+class TestCityClass(unittest.TestCase):
+    """TestCityClass test for the city class
+    Args:
+        unittest (): Propertys for unit testing
     """
-    Tests for amenities
-    """
 
-    obj = City()
+    maxDiff = None
 
     def setUp(self):
-        """set initial"""
-        name = ""
-        state_id = ""
+        """Return to "" class attributes"""
+        City.name = ""
+        City.state_id = ""
 
-    def test_normal(self):
-        """normal cases"""
-        my_object = City()
-        my_object.name = "Holbiland"
-        my_object.my_number = 29
-        my_object.save()
-        my_object_dict = my_object.to_dict()
-        self.assertEqual(my_object.name, "Holbiland")
-        self.assertEqual(my_object.my_number, 29)
-        self.assertEqual(my_object.__class__.__name__, "City")
-        self.assertEqual(isinstance(my_object.created_at, datetime), True)
-        self.assertEqual(isinstance(my_object.updated_at, datetime), True)
-        self.assertEqual(type(my_object.__dict__), dict)
+    def test_module_doc(self):
+        """ check for module documentation """
+        self.assertTrue(len(city.__doc__) > 0)
 
-    def test_subclass(self):
-        """test if class is subclass"""
-        self.assertEqual(issubclass(City, BaseModel), True)
-    
-    def test_type(self):
-        """test type of object"""
-        self.assertEqual(type(self.obj.name), str)
-        self.assertEqual(type(self.obj.state_id), str)
-	
+    def test_class_doc(self):
+        """ check for documentation """
+        self.assertTrue(len(City.__doc__) > 0)
+
+    def test_method_docs(self):
+        """ check for method documentation """
+        for func in dir(City):
+            self.assertTrue(len(func.__doc__) > 0)
+
+    def test_pep8(self):
+        """ test base and test_base for pep8 conformance """
+        style = pep8.StyleGuide(quiet=True)
+        file1 = 'models/city.py'
+        file2 = 'tests/test_models/test_city.py'
+        result = style.check_files([file1, file2])
+        self.assertEqual(result.total_errors, 0,
+                         "Found code style errors (and warning).")
+
+    def test_is_instance(self):
+        """ Test if user is instance of basemodel """
+        my_city = City()
+        self.assertTrue(isinstance(my_city, BaseModel))
+
+    def test_field_types(self):
+        """ Test field attributes of user """
+        my_city = City()
+        self.assertTrue(type(my_city.name) == str)
+        self.assertTrue(type(my_city.state_id) == str)
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -1,46 +1,70 @@
 #!/usr/bin/python3
+"""Unit test for the file storage class
 """
-Test suits for amenities
-"""
-import os
-from models.amenity import Amenity
 import unittest
-from datetime import datetime
+# import json
+import pep8
+from models import amenity
+from models.amenity import Amenity
 from models.base_model import BaseModel
+from models import storage
+import os
 
 
-class TestAmenity(unittest.TestCase):
+class TestAmenityClass(unittest.TestCase):
+    """TestAmenityClass test for the inheretit class
+    Amenity, this tests that the output is as expected
+    Args:
+        unittest (): Propertys for unit testing
     """
-    Tests for amenities
-    """
 
-    obj = Amenity()
+    def tearDown(self):
+        """ destroys created file """
+        storage._FileStorage__file_path = "file.json"
+        try:
+            os.remove("test.json")
+        except FileNotFoundError:
+            pass
 
     def setUp(self):
-        """set initial"""
-        name = ""
+        """Return to "" class attributes"""
+        with open("test.json", 'w'):
+            storage._FileStorage__file_path = "test.json"
+            storage._FileStorage__objects = {}
+        Amenity.name = ""
 
-    def test_normal_cases_amenity(self):
-        """normal cases"""
-        my_object = Amenity()
-        my_object.name = "Holbiland"
-        my_object.my_number = 29
-        my_object.save()
-        my_object_dict = my_object.to_dict()
-        self.assertEqual(my_object.name, "Holbiland")
-        self.assertEqual(my_object.my_number, 29)
-        self.assertEqual(my_object.__class__.__name__, "Amenity")
-        self.assertEqual(isinstance(my_object.created_at, datetime), True)
-        self.assertEqual(isinstance(my_object.updated_at, datetime), True)
-        self.assertEqual(type(my_object.__dict__), dict)
+    def test_module_doc(self):
+        """ check for module documentation """
+        self.assertTrue(len(amenity.__doc__) > 0)
 
-    def test_subclass(self):
-        """test if class is subclass"""
-        self.assertEqual(issubclass(Amenity, BaseModel), True)
+    def test_class_doc(self):
+        """ check for documentation """
+        self.assertTrue(len(Amenity.__doc__) > 0)
 
-    def test_type(self):
-        """test type of object"""
-        obj = Amenity()
-        self.assertEqual(type(self.obj.name), str)
+    def test_method_docs(self):
+        """ check for method documentation """
+        for func in dir(Amenity):
+            self.assertTrue(len(func.__doc__) > 0)
+
+    def test_pep8(self):
+        """ test base and test_base for pep8 conformance """
+        style = pep8.StyleGuide(quiet=True)
+        file1 = 'models/amenity.py'
+        file2 = 'tests/test_models/test_amenity.py'
+        result = style.check_files([file1, file2])
+        self.assertEqual(result.total_errors, 0,
+                         "Found code style errors (and warning).")
+
+    def test_is_instance(self):
+        """ Test if user is instance of basemodel """
+        my_Amenity = Amenity()
+        self.assertTrue(isinstance(my_Amenity, BaseModel))
+
+    def test_field_types(self):
+        """ Test field attributes of user """
+        my_Amenity = Amenity()
+        self.assertTrue(type(my_Amenity.name) == str)
+
+
 if __name__ == '__main__':
     unittest.main()

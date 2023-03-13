@@ -1,57 +1,58 @@
 #!/usr/bin/python3
 """
-Module file_storage serializes and
-deserializes JSON types
+This engine is in charge of serial/unserial objects to files
 """
-
 import json
-from models.base_model import BaseModel
-from models.user import User
+import os
 
 
-class FileStorage:
-    """
-    Custom class for file storage
-    """
-
+class FileStorage():
+    """Serialize/Deserialize python data"""
     __file_path = "file.json"
     __objects = {}
 
     def all(self):
-        """
-        Returns dictionary representation of all objects
-        """
-        return self.__objects
+        """ returns the dictionaries"""
+        return (FileStorage.__objects)
 
-    def new(self, object):
-        """sets in __objects the object with the key
-        <object class name>.id
-
-        Args:
-            object(obj): object to write
-
-        """
-        self.__objects[object.__class__.__name__ + '.' + str(object)] = object
+    def new(self, obj):
+        """ create a new object """
+        class_name = type(obj).__name__
+        my_id = obj.id
+        instance_key = class_name + "." + my_id
+        FileStorage.__objects[instance_key] = obj
 
     def save(self):
-        """
-        serializes __objects to the JSON file
-        (path: __file_path)
-        """
-        with open(self.__file_path, 'w+') as f:
-            json.dump({k: v.to_dict() for k, v in self.__objects.items()
-                       }, f)
+        """ saves in json format to a file """
+        my_obj_dict = {}
+        for key in FileStorage.__objects:
+            my_obj_dict[key] = FileStorage.__objects[key].to_dict()
+        with open(FileStorage.__file_path, 'w') as file_path:
+            json.dump(my_obj_dict, file_path)
 
     def reload(self):
-        """
-        deserializes the JSON file to __objects, if the JSON
-        file exists, otherwise nothing happens)
-        """
-        try:
-            with open(self.__file_path, 'r') as f:
-                dict = json.loads(f.read())
-                for value in dict.values():
-                    cls = value["__class__"]
-                    self.new(eval(cls)(**value))
-        except Exception:
-            pass
+        """ loads from json file """
+        from models.base_model import BaseModel
+        from models.user import User
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.place import Place
+        from models.review import Review
+        my_dict = {
+            "BaseModel": BaseModel,
+            "User": User,
+            "State": State,
+            "City": City,
+            "Amenity": Amenity,
+            "Place": Place,
+            "Review": Review
+            }
+        if not os.path.isfile(FileStorage.__file_path):
+            return
+        with open(FileStorage.__file_path, "r") as file_path:
+            objects = json.load(file_path)
+            FileStorage.__objects = {}
+            for key in objects:
+                name = key.split(".")[0]
+                FileStorage.__objects[key] = my_dict[name](**objects[key])
