@@ -11,6 +11,7 @@ import unittest
 from time import sleep
 from datetime import datetime
 from models.base_model import BaseModel
+from models import storage
 
 
 class TestBaseModel(unittest.TestCase):
@@ -38,14 +39,20 @@ class TestBaseModel(unittest.TestCase):
         """
         Tests for correct datetime format
         """
-        pass
-    
-    def test_datetime(self):
-        """
-        Tests for correct datetime format
-        """
-        pass
+        my_model = BaseModel()
+        my_model.name = "ALX"
+        my_model.number = 89
+        self.assertEqual(isinstance(my_model.created_at, datetime), True)
+        self.assertEqual(isinstance(my_model.updated_at, datetime), True)
 
+    def test_type(self):
+        """
+        Tests the type of __dict__
+        """
+        my_model = BaseModel()
+        my_model.name = "ALX"
+        my_model.number = 89
+        self.assertEqual(type(my_model.__dict__), dict)
 
 if __name__ == '__main__':
     unittest.main()
