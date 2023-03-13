@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
 """
 first version of the console
@@ -17,7 +17,6 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
-
 
 
 class HBNBCommand(cmd.Cmd):
@@ -163,7 +162,7 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, line):
         """Shows all instances, or instances of a certain class
 
-        Args: 
+        Args:
             line(args): enter with command (optional): <class name>
             Example: 'all' OR 'all User'
 
