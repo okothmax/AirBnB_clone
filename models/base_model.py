@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
 '''
 Foundation(parent) class for the whole project
@@ -7,6 +7,7 @@ Foundation(parent) class for the whole project
 import datetime
 from uuid import uuid4
 import models
+
 
 class BaseModel:
     """
