@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 '''
-Foundation(parent) class fpr the whole project
+Foundation(parent) class for the whole project
 '''
 
 import datetime
 from uuid import uuid4
-
+import models
 
 class BaseModel:
     """
@@ -31,7 +31,7 @@ class BaseModel:
 
         Args:
             *args(args): arguments
-            **kwargs(dict): attrubute values
+            **kwargs(dict): attribute values
         '''
         DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
         if not kwargs:
@@ -41,7 +41,7 @@ class BaseModel:
         else:
             for key, value in kwargs.items():
                 if key in ("updated_at", "created_at"):
-                    self.__dict__[key] = datetime.strptime(
+                    self.__dict__[key] = datetime.datetime.strptime(
                         value, DATE_TIME_FORMAT)
                 elif key[0] == "id":
                     self.__dict__[key] = str(value)
@@ -59,7 +59,8 @@ class BaseModel:
         Updates the public instance attribute:
         'updated_at' - with the current datetime
         """
-        self.updated_at = datetime.utcnow()
+        self.updated_at = datetime.datetime.now()
+        models.storage.save()
 
     def to_dict(self):
         """

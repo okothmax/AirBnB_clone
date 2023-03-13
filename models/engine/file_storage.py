@@ -1,31 +1,56 @@
 #!/usr/bin/python3
 """
-This engine is in charge of serial/unserial objects to files
+Module file_storage serializes and
+deserializes JSON types
 """
+
 import json
-import os
+from models.base_model import BaseModel
 
 
-class FileStorage():
-    """Serialize/Deserialize python data"""
+class FileStorage:
+    """
+    Custom class for file storage
+    """
+
     __file_path = "file.json"
     __objects = {}
 
     def all(self):
-        """ returns the dictionaries"""
-        return (FileStorage.__objects)
+        """
+        Returns dictionary representation of all objects
+        """
+        return self.__objects
 
-    def new(self, obj):
-        """ create a new object """
-        class_name = type(obj).__name__
-        my_id = obj.id
-        instance_key = class_name + "." + my_id
-        FileStorage.__objects[instance_key] = obj
+    def new(self, object):
+        """sets in __objects the object with the key
+        <object class name>.id
+
+        Args:
+            object(obj): object to write
+
+        """
+        self.__objects[object.__class__.__name__ + '.' + str(object)] = object
 
     def save(self):
-        """ saves in json format to a file """
-        my_obj_dict = {}
-        for key in FileStorage.__objects:
-            my_obj_dict[key] = FileStorage.__objects[key].to_dict()
-        with open(FileStorage.__file_path, 'w') as file_path:
-            json.dump(my_obj_dict, file_path)
+        """
+        serializes __objects to the JSON file
+        (path: __file_path)
+        """
+        with open(self.__file_path, 'w+') as f:
+            json.dump({k: v.to_dict() for k, v in self.__objects.items()
+                       }, f)
+
+    def reload(self):
+        """
+        deserializes the JSON file to __objects, if the JSON
+        file exists, otherwise nothing happens)
+        """
+        try:
+            with open(self.__file_path, 'r') as f:
+                dict = json.loads(f.read())
+                for value in dict.values():
+                    cls = value["__class__"]
+                    self.new(eval(cls)(**value))
+        except Exception:
+            pass
