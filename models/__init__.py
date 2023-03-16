@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+
 """ call to filestorage class """
 
 
