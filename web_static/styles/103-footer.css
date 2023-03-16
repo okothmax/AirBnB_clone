@@ -1,0 +1,27 @@
+@media screen and (min-width: 1090px){
+    footer {
+        background-color: white; 
+        height: 60px; 
+        width: 100%; 
+        position: fixed;
+        border-top: 1px solid #CCCCCC;
+        bottom: 0px; 
+        justify-content: center; 
+        display: flex; 
+        align-items: center
+    }
+}
+
+@media screen and (max-width:1089px){
+    footer {
+        background-color: white; 
+        height: 30px; 
+        width: 100%; 
+        position: fixed;
+        border-top: 1px solid #CCCCCC;
+        bottom: 0px; 
+        justify-content: center; 
+        display: flex; 
+        align-items: center
+    }
+}
